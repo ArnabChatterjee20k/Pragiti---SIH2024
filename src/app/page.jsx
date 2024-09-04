@@ -37,14 +37,14 @@ const Button = ({ children, className }) => (
 export default function Home() {
   return (
     <div className="h-screen bg-white text-black overflow-hidden">
-      <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-<df-messenger
-  chat-icon="https:&#x2F;&#x2F;www.shutterstock.com&#x2F;shutterstock&#x2F;photos&#x2F;1841577400&#x2F;display_1500&#x2F;stock-vector-chatbot-icon-line-vector-isolate-on-white-background-1841577400.jpg"
-  intent="WELCOME"
-  chat-title="PRAGATI"
-  agent-id="6dd23b1f-bf0d-4362-97a0-d56afae84cec"
-  language-code="en"
-></df-messenger>
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+  <df-messenger
+    chat-icon="https:&#x2F;&#x2F;www.shutterstock.com&#x2F;shutterstock&#x2F;photos&#x2F;2343213587&#x2F;display_1500&#x2F;stock-vector-trendy-email-icon-vector-message-icon-mail-icon-inbox-sign-messaging-symbol-envelope-black-and-2343213587.jpg"
+    intent="WELCOME"
+    chat-title="PRAGATI"
+    agent-id="6dd23b1f-bf0d-4362-97a0-d56afae84cec"
+    language-code="en"
+  ></df-messenger>
       <header className="bg-white p-2">
         <nav className="container mx-auto px-4 flex justify-between h-20 items-center">
           <motion.div 
