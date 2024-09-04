@@ -12,7 +12,6 @@ const departmentalSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, "Please provide an email address"],
-    unique: true, // Ensure email is unique
   },
   phone: {
     type: String,
@@ -31,7 +30,6 @@ const departmentalSchema = new mongoose.Schema({
   emp_no: {
     type: String,
     required: [true, "Please provide an employee number"],
-    unique: true, // Ensure employee number is unique
   },
   location: {
     type: String,
@@ -65,6 +63,6 @@ const departmentalSchema = new mongoose.Schema({
 });
 
 const Departmental =
-  mongoose.models.Departmental || mongoose.model("departmentals", departmentalSchema);
+  mongoose.models.Departmental || mongoose.model("Departmental", departmentalSchema);
 
 export default Departmental;

@@ -29,23 +29,24 @@ async function ai(data: any) {
   const apiKey = "AIzaSyAgHpbM2nVl1PavlwUqf10bV7j03GgzFXg";
 
   const template = `
-  I will give you a list of data
-  Ex of data
-  {{${JSON.stringify(data)}}}
-  To handle task prioritization where certain tasks depend on the completion of others, such as road construction waiting for the installation of gas pipelines, water pipelines, and electricity underground lines, implement a Dependency-Based Task Scheduling system.
-  output format
-  json
-  {{
-  id:task_id,
-  dependent_on : [task_id]
-  }}
-  Dont output any other text
-  if they are not dependent then give {}`;
+                I will give you a list of data
+            Ex of data
+  ${JSON.stringify(data, null, 2).replace(/\"/g, '\\"')}
+            To handle task prioritization where certain tasks depend on the completion of others, such as road construction waiting for the installation of gas pipelines, water pipelines, and electricity underground lines, implement a Dependency-Based Task Scheduling system.
+            output format
+            json
+            {
+            id:task_id,
+            dependent_on : [task_id]
+            }
+            Dont output any other text
+            if they are not dependent then give {}`;
 
   const promptTemplate = new PromptTemplate({
     template,
     inputVariables: ["data"],
   });
+
   const geminiModel = new ChatGoogleGenerativeAI({
     modelName: "gemini-pro",
     apiKey: apiKey,

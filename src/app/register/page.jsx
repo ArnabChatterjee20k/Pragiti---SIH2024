@@ -59,23 +59,24 @@ export default function RegisterLoginPage() {
   const handleSubmitDepartmental = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    debugger;
     try {
-      const response = await fetch('https://localhost:3000/api/departmental', {
+      const response = await fetch('/api/departmental', {
         method: 'POST',
         body: JSON.stringify({
-          fullName: formData.get('fullName'),
-          email: formData.get('email'),
-          contactNumber: formData.get('contactNumber'),
-          employeeNumber: formData.get('employeeNumber'),
-          location: formData.get('location'),
-          address: formData.get('address'),
-          pinCode: formData.get('pinCode'),
-          departmentLevel,
-          department: formData.get('department'),
-          role,
-          password: formData.get('password'),
-          confirmPassword: formData.get('confirmPassword'),
+          "name": "Alice Johnson",
+          "pass": "securePassword789!",
+          "email": "alice.johnson12111@example.com",
+          "phone": "+1987654321",
+          "dept_level": "State",
+          "role": "Technical",
+          "emp_no": "E12223456",
+          "location": "New York",
+          "office_address": "123 State Street, Suite 456, New York, NY 10001",
+          "pin_code": "10001",
+          "govt_issue_id_file_id": "234e5678-e89b-12d3-a456-426614174000",
+          "authorisation_file_id": "345e6789-b21a-34c3-b123-567890abcdef",
+          "prev_project_file_id": "456e7890-c32b-45d3-c234-678901234567",
+          "verified": true
         }),
         headers: {
           'Content-Type': 'application/json',
@@ -182,6 +183,7 @@ export default function RegisterLoginPage() {
               animate="visible"
               exit="exit"
               transition={{ duration: 0.5 }}
+              onSubmit={async(e)=>{e.preventDefault();await handleSubmitDepartmental(e)}}
             >
               {departmentalStep === 1 && (
                 <>
@@ -266,7 +268,7 @@ export default function RegisterLoginPage() {
                         </Button>
                       </Link>
                     ) : (
-                      <Button type="submit" className="w-full bg-[#FF5900] text-white py-3 rounded-full hover:bg-[#FF7A33] flex items-center justify-center" onSubmit={handleSubmitDepartmental}>
+                      <Button className="w-full bg-[#FF5900] text-white py-3 rounded-full hover:bg-[#FF7A33] flex items-center justify-center" onSubmit={handleSubmitDepartmental}>
                         <FaUser className="mr-2" /> REGISTER AS DEPARTMENTAL
                       </Button>
                     )}
