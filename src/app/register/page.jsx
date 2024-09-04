@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { FaHandPointRight, FaUser } from 'react-icons/fa';
 import { BsTranslate } from "react-icons/bs";
 import InputBox from '@/components/InputBox';
+import Link from 'next/link'; 
 
 const Button = ({ children, className, onClick }) => (
   <motion.button
@@ -26,6 +27,76 @@ const formVariants = {
 export default function RegisterLoginPage() {
   const [activeForm, setActiveForm] = useState('councillor');
   const [departmentalStep, setDepartmentalStep] = useState(1);
+  const [departmentLevel, setDepartmentLevel] = useState('');
+  const [role, setRole] = useState('');
+
+  const stateDepartments = [
+    "Public Works Department",
+    "Urban Planning Department",
+    "Environmental Department",
+    "Water Supply Department",
+    "Health Department",
+    "Electricity Department"
+  ];
+
+  const localDepartments = [
+    "Municipality",
+    "Municipal Corporation",
+    "Nagar Panchayat",
+    "Gramin Panchayat"
+  ];
+
+  const handleDepartmentLevelChange = (e) => {
+    setDepartmentLevel(e.target.value);
+  };
+
+  const handleRoleChange = (e) => {
+    setRole(e.target.value);
+  };
+
+  const filteredDepartments = departmentLevel === 'State' ? stateDepartments : departmentLevel === 'District' ? localDepartments : [];
+
+  const handleSubmitDepartmental = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    debugger;
+    try {
+      const response = await fetch('https://localhost:3000/api/departmental', {
+        method: 'POST',
+        body: JSON.stringify({
+          fullName: formData.get('fullName'),
+          email: formData.get('email'),
+          contactNumber: formData.get('contactNumber'),
+          employeeNumber: formData.get('employeeNumber'),
+          location: formData.get('location'),
+          address: formData.get('address'),
+          pinCode: formData.get('pinCode'),
+          departmentLevel,
+          department: formData.get('department'),
+          role,
+          password: formData.get('password'),
+          confirmPassword: formData.get('confirmPassword'),
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        if (role === 'Technical Expert') {
+          alert('Registration successful. Redirecting...');
+        } else {
+          alert(result.message);
+        }
+      } else {
+        alert(result.message);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   const renderRegistrationForm = () => {
     switch (activeForm) {
@@ -48,10 +119,10 @@ export default function RegisterLoginPage() {
               <InputBox type="text" placeholder="PIN Code" className="w-1/2" />
             </div>
             <div className="flex gap-0">
-                <label className="block text-sm font-medium text-gray-700">
-                  Upload Govt. Issued ID
-                </label>
-                <InputBox type="file" accept="image/*" placeholder="Upload Govt Issued ID" />
+              <label className="block text-sm font-medium text-gray-700">
+                Upload Govt. Issued ID
+              </label>
+              <InputBox type="file" accept="image/*" placeholder="Upload Govt Issued ID" />
             </div>
             <div className="flex space-x-4">
               <InputBox type="password" placeholder="Password" className="w-1/2" />
@@ -80,18 +151,18 @@ export default function RegisterLoginPage() {
               <InputBox type="text" placeholder="PIN Code" className="w-1/2" />
             </div>
             <div className='flex flex-row space-x-4'>
-            <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-1">
                 <label className="block text-sm font-medium text-gray-700">
                   Upload Govt. Issued ID
                 </label>
                 <InputBox type="file" accept="image/*" placeholder="Upload Govt Issued ID" />
-            </div>
-            <div className="flex flex-col gap-1">
+              </div>
+              <div className="flex flex-col gap-1">
                 <label className="block text-sm font-medium text-gray-700">
                   Upload Contractor License
                 </label>
                 <InputBox type="file" accept="image/*" placeholder="Upload Contractor License" />
-            </div>
+              </div>
             </div>
             <div className="flex space-x-4">
               <InputBox type="password" placeholder="Password" className="w-1/2" />
@@ -102,98 +173,112 @@ export default function RegisterLoginPage() {
             </Button>
           </motion.form>
         );
-      case 'departmental':
-        return (
-          <motion.form
-            className="space-y-4"
-            variants={formVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            transition={{ duration: 0.5 }}
-          >
-            {departmentalStep === 1 && (
-              <>
-                <InputBox type="text" placeholder="Full Name" />
-                <InputBox type="email" placeholder="Email Address" />
-                <div className="flex space-x-4">
-                  <InputBox type="tel" placeholder="Contact Number" className="w-full" />
-                  <InputBox type="text" placeholder="Employee Number" className="w-full" />
-                </div>
-                <InputBox type="text" placeholder="Location" />
-                <div className="flex space-x-4">
-                  <InputBox type="text" placeholder="Address" className="w-full" />
-                  <InputBox type="text" placeholder="PIN Code" className="w-full" />
-                </div>
-                <Button className="w-full bg-[#FF5900] text-white py-3 rounded-full hover:bg-[#FF7A33]" onClick={() => setDepartmentalStep(2)}>
-                  Next
-                </Button>
-              </>
-            )}
-            {departmentalStep === 2 && (
-              <>
-            <div className="flex gap-0">
-                <label className="block text-sm font-medium text-gray-700">
-                  Upload Govt. Issued ID
-                </label>
-                <InputBox type="file" accept="image/*" placeholder="Upload Govt Issued ID" />
-            </div>
-            <div className="flex gap-0">
-                <label className="block text-sm font-medium text-gray-700">
-                  Upload Departmental Authenticated Letter
-                </label>
-                <InputBox type="file" accept="image/*" placeholder="Upload Departmental Auth Letter" />
-            </div>
-            <div className="flex gap-0">
-                <label className="block text-sm font-medium text-gray-700">
-                  Upload Previous Projects
-                </label>
-                <InputBox type="file" accept="image/*" placeholder="Upload Previous Projects" />
-            </div>
-                <select className="w-full p-2 border rounded">
-                  <option value="">Select Department Level</option>
-                  {/* Add options here */}
-                </select>
-                <select className="w-full p-2 border rounded">
-                  <option value="">Select Department</option>
-                  {/* Add options here */}
-                </select>
-                <select className="w-full p-2 border rounded">
-                  <option value="">Select Role</option>
-                  <option value="councillor">Councillor</option>
-                  <option value="contractor">Contractor</option>
-                  {/* Add options here */}
-                </select>
-                <div className="flex space-x-4">
-                  <Button className="w-full bg-[#FF5900] text-white py-3 rounded-full hover:bg-[#FF7A33]" onClick={() => setDepartmentalStep(1)}>
-                    Back
-                  </Button>
-                  <Button className="w-full bg-[#FF5900] text-white py-3 rounded-full hover:bg-[#FF7A33]" onClick={() => setDepartmentalStep(3)}>
+        case 'departmental':
+          return (
+            <motion.form
+              className="space-y-4"
+              variants={formVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              transition={{ duration: 0.5 }}
+            >
+              {departmentalStep === 1 && (
+                <>
+                  <InputBox name="fullName" type="text" placeholder="Full Name" />
+                  <InputBox name="email" type="email" placeholder="Email Address" />
+                  <div className="flex space-x-4">
+                    <InputBox name="contactNumber" type="tel" placeholder="Contact Number" className="w-full" />
+                    <InputBox name="employeeNumber" type="text" placeholder="Employee Number" className="w-full" />
+                  </div>
+                  <InputBox name="location" type="text" placeholder="Location" />
+                  <div className="flex space-x-4">
+                    <InputBox name="address" type="text" placeholder="Address" className="w-full" />
+                    <InputBox name="pinCode" type="text" placeholder="PIN Code" className="w-full" />
+                  </div>
+                  <Button className="w-full bg-[#FF5900] text-white py-3 rounded-full hover:bg-[#FF7A33]" onClick={() => setDepartmentalStep(2)}>
                     Next
                   </Button>
-                </div>
-              </>
-            )}
-            {departmentalStep === 3 && (
-              <>
-                <InputBox type="password" placeholder="Password" />
-                <InputBox type="password" placeholder="Confirm Password" />
-                <div className="flex space-x-2">
-                  <Button className="w-32 bg-[#FF5900] text-white py-3 rounded-full hover:bg-[#FF7A33]" onClick={() => setDepartmentalStep(2)}>
-                    Back
-                  </Button>
-                  <Button className="w-full bg-[#FF5900] text-white py-3 rounded-full hover:bg-[#FF7A33] flex items-center justify-center">
-                    <FaUser className="mr-2" /> REGISTER AS DEPARTMENTAL
-                  </Button>
-                </div>
-              </>
-            )}
-          </motion.form>
-        );
-      default:
-        return null;
-    }
-  };
+                </>
+              )}
+              {departmentalStep === 2 && (
+                <>
+                  <div className="flex gap-0">
+                    <label className="block text-sm font-medium text-gray-700">Upload Govt. Issued ID</label>
+                    <InputBox name="govtId" type="file" accept="image/*" />
+                  </div>
+                  <div className="flex gap-0">
+                    <label className="block text-sm font-medium text-gray-700">Upload Departmental Authenticated Letter</label>
+                    <InputBox name="deptAuthLetter" type="file" accept="image/*" />
+                  </div>
+                  <div className="flex gap-0">
+                    <label className="block text-sm font-medium text-gray-700">Upload Previous Projects</label>
+                    <InputBox name="previousProjects" type="file" accept="image/*" />
+                  </div>
+                  <select
+                    name="departmentLevel"
+                    className="w-full p-2 border rounded"
+                    value={departmentLevel}
+                    onChange={handleDepartmentLevelChange}
+                  >
+                    <option value="">Select Department Level</option>
+                    <option value="State">State Department</option>
+                    <option value="District">Local Department</option>
+                  </select>
+                  <select name="department" className="w-full p-2 border rounded" disabled={!departmentLevel}>
+                    <option value="">Select Department</option>
+                    {filteredDepartments.map((dept, index) => (
+                      <option key={index} value={dept}>{dept}</option>
+                    ))}
+                  </select>
+                  <select
+                    name="role"
+                    className="w-full p-2 border rounded"
+                    value={role}
+                    onChange={handleRoleChange}
+                  >
+                    <option value="">Select Role</option>
+                    <option value="Technical Expert">Technical Expert</option>
+                    <option value="Owner">Owner/ Head of Department</option>
+                  </select>
+                  <div className="flex space-x-4">
+                    <Button className="w-full bg-[#FF5900] text-white py-3 rounded-full hover:bg-[#FF7A33]" onClick={() => setDepartmentalStep(1)}>
+                      Back
+                    </Button>
+                    <Button className="w-full bg-[#FF5900] text-white py-3 rounded-full hover:bg-[#FF7A33]" onClick={() => setDepartmentalStep(3)}>
+                      Next
+                    </Button>
+                  </div>
+                </>
+              )}
+              {departmentalStep === 3 && (
+                <>
+                  <InputBox name="password" type="password" placeholder="Password" />
+                  <InputBox name="confirmPassword" type="password" placeholder="Confirm Password" />
+                  <div className="flex space-x-2">
+                    <Button className="w-32 bg-[#FF5900] text-white py-3 rounded-full hover:bg-[#FF7A33]" onClick={() => setDepartmentalStep(2)}>
+                      Back
+                    </Button>
+                    {role === 'Technical Expert' ? (
+                      <Link href="/techexp">
+                        <Button type="submit" className="w-full bg-[#FF5900] text-white py-3 rounded-full hover:bg-[#FF7A33] flex items-center justify-center">
+                          <FaUser className="mr-2" /> REGISTER AS DEPARTMENTAL
+                        </Button>
+                      </Link>
+                    ) : (
+                      <Button type="submit" className="w-full bg-[#FF5900] text-white py-3 rounded-full hover:bg-[#FF7A33] flex items-center justify-center" onSubmit={handleSubmitDepartmental}>
+                        <FaUser className="mr-2" /> REGISTER AS DEPARTMENTAL
+                      </Button>
+                    )}
+                  </div>
+                </>
+              )}
+            </motion.form>
+          );
+        default:
+          return null;
+      }
+    };
 
   return (
     <div className="min-h-screen bg-white text-black">
@@ -204,7 +289,7 @@ export default function RegisterLoginPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <motion.div 
+          <motion.div
             className="text-4xl font-bold text-[#516774]"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -235,21 +320,21 @@ export default function RegisterLoginPage() {
           >
             <h2 className="text-4xl font-bold text-[#516774] mb-6">REGISTER</h2>
             <div className="flex space-x-2 mb-4">
-              <Button 
+              <Button
                 className={`px-4 py-2 rounded-2xl ${activeForm === 'councillor' ? 'bg-[#FDE8DD] text-[#516774]' : 'bg-white text-[#516774] border border-[#516774]'}`}
                 onClick={() => setActiveForm('councillor')}
               >
                 Councillor
               </Button>
-              <Button 
+              <Button
                 className={`px-4 py-2 rounded-2xl ${activeForm === 'contractor' ? 'bg-[#FDE8DD] text-[#516774]' : 'bg-white text-[#516774] border border-[#516774]'}`}
                 onClick={() => setActiveForm('contractor')}
               >
                 Contractor
               </Button>
-              <Button 
+              <Button
                 className={`px-4 py-2 rounded-2xl ${activeForm === 'departmental' ? 'bg-[#FDE8DD] text-[#516774]' : 'bg-white text-[#516774] border border-[#516774]'}`}
-                onClick={() => {setActiveForm('departmental'); setDepartmentalStep(1);}}
+                onClick={() => { setActiveForm('departmental'); setDepartmentalStep(1); }}
               >
                 Departmental
               </Button>
