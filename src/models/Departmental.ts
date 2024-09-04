@@ -65,6 +65,6 @@ const departmentalSchema = new mongoose.Schema({
 });
 
 const Departmental =
-  mongoose.models.Departmental || mongoose.model("Departmental", departmentalSchema);
+  mongoose.models.Departmental || mongoose.model("departmentals", departmentalSchema);
 
 export default Departmental;

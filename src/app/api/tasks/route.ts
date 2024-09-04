@@ -6,7 +6,7 @@ connect();
 
 export async function GET() {
   try {
-    const tasks = await Task.find({}).populate('head_ids'); // Populate head_ids to get detailed info
+    const tasks = await Task.find({})
     return NextResponse.json({ tasks });
   } catch (error) {
     console.log({ error });

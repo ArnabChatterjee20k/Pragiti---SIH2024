@@ -24,7 +24,7 @@ const taskSchema = new mongoose.Schema({
   },
   head_ids: {
     type: [mongoose.Schema.Types.ObjectId],
-    ref: "Departmental", // Reference to the Departmental model
+    ref: "departmentals", // Reference to the Departmental model
     required: [true, "Please provide head IDs"],
   },
   resources: {
