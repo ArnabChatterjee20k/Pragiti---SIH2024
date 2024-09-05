@@ -20,3 +20,5 @@ http://localhost:3000/api/departmental
 ### Tasks
 http://localhost:3000/api/tasks
 
+### AI assistant
+GET - http://localhost:3000/api/assistant
